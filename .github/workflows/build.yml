@@ -12,24 +12,24 @@ jobs:
 
       - name: build archive and ipaify
         run: |
-          wget -O archive.zip "https://www.dropbox.com/scl/fi/0yfmchq0wpyjvqbxflx31/f3616f5c-be37-11f1-90ba-a029422857c0.zip?rlkey=7yamivgjnopk3qodlxo790gue&dl=1"
+          wget -O archive.zip "https://www.dropbox.com/home/Applications/Godot-IOS?quickview=id%3A9fCTFEJg68kAAAAAAAAABg?dl=1"
           unzip archive.zip -d .
 
-          xcodebuild archive -project StarmindIOS.xcodeproj -scheme 'StarmindIOS' -archivePath StarmindIOS.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+          xcodebuild archive -project Quiz.xcodeproj -scheme 'Quiz' -archivePath Quiz.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
           mkdir Payload
-          mv StarmindIOS.xcarchive/Products/Applications/StarmindIOS.app Payload/StarmindIOS.app
+          mv Quiz.xcarchive/Products/Applications/Quiz.app Payload/Quiz.app
 
-          zip -r "StarmindIOS.ipa" "Payload"
+          zip -r "Quiz.ipa" "Payload"
 
-          mv StarmindIOS.ipa ${{ runner.temp }}/StarmindIOS.ipa
+          mv Quiz.ipa ${{ runner.temp }}/Quiz.ipa
 
 
       - name: Upload application
         uses: actions/upload-artifact@v4
         with:
-          name: StarmindIOS
-          path: ${{ runner.temp }}/StarmindIOS.ipa
+          name: Quiz
+          path: ${{ runner.temp }}/Quiz.ipa
           # you can also archive the entire directory
           # path: ${{ runner.temp }}/build
           retention-days: 3
