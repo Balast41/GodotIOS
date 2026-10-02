@@ -12,7 +12,7 @@ jobs:
 
       - name: build archive and ipaify
         run: |
-          wget -O archive.zip "https://www.dropbox.com/scl/fo/o08z6yl8zv2iumuh9m5g5/AOMSBWU6s9xYScw7IsgL4YE?rlkey=dpr367ef3gxpv4ofssez6jls6&st=cu8f6d87&dl=1"
+          wget -O archive.zip "https://www.dropbox.com/scl/fi/0yfmchq0wpyjvqbxflx31/f3616f5c-be37-11f1-90ba-a029422857c0.zip?rlkey=7yamivgjnopk3qodlxo790gue&st=szcogvix&dl=1"
           unzip archive.zip -d .
 
           xcodebuild archive -project Quiz.xcodeproj -scheme 'Quiz' -archivePath Quiz.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
