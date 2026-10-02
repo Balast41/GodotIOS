@@ -1,0 +1,35 @@
+name: "Build iOS app"
+
+# on: [push]
+on: [workflow_dispatch]
+
+jobs:
+  build_ios:
+    runs-on: macos-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: build archive and ipaify
+        run: |
+          wget -O archive.zip "https://www.dropbox.com/scl/fi/0yfmchq0wpyjvqbxflx31/f3616f5c-be37-11f1-90ba-a029422857c0.zip?rlkey=7yamivgjnopk3qodlxo790gue&dl=1"
+          unzip archive.zip -d .
+
+          xcodebuild archive -project StarmindIOS.xcodeproj -scheme 'StarmindIOS' -archivePath StarmindIOS.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+          mkdir Payload
+          mv StarmindIOS.xcarchive/Products/Applications/StarmindIOS.app Payload/StarmindIOS.app
+
+          zip -r "StarmindIOS.ipa" "Payload"
+
+          mv StarmindIOS.ipa ${{ runner.temp }}/StarmindIOS.ipa
+
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: StarmindIOS
+          path: ${{ runner.temp }}/StarmindIOS.ipa
+          # you can also archive the entire directory
+          # path: ${{ runner.temp }}/build
+          retention-days: 3
