@@ -9,27 +9,30 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-
+        
       - name: build archive and ipaify
         run: |
           wget -O archive.zip "https://www.dropbox.com/scl/fi/0yfmchq0wpyjvqbxflx31/f3616f5c-be37-11f1-90ba-a029422857c0.zip?rlkey=7yamivgjnopk3qodlxo790gue&st=szcogvix&dl=1"
-          unzip archive.zip -d .
 
-          xcodebuild archive -project Quiz.xcodeproj -scheme 'Quiz' -archivePath Quiz.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+          unzip -q archive.zip -d dl || true
+          INNER=$(find dl -maxdepth 2 -name '*.zip' | head -1)
+          if [ -n "$INNER" ]; then
+            unzip -q "$INNER" -d project
+          else
+            mv dl project
+          fi
+
+          PROJ=$(find project -maxdepth 3 -name '*.xcodeproj' | head -1)
+          if [ -z "$PROJ" ]; then
+            echo "Aucun .xcodeproj trouvé :"
+            find project -maxdepth 3
+            exit 1
+          fi
+          cd "$(dirname "$PROJ")"
+
+          xcodebuild archive -project Quiz.xcodeproj -scheme Quiz -archivePath Quiz.xcarchive -configuration Release -destination 'generic/platform=iOS' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
           mkdir Payload
           mv Quiz.xcarchive/Products/Applications/Quiz.app Payload/Quiz.app
-
-          zip -r "Quiz.ipa" "Payload"
-
-          mv Quiz.ipa ${{ runner.temp }}/Quiz.ipa
-
-
-      - name: Upload application
-        uses: actions/upload-artifact@v4
-        with:
-          name: Quiz
-          path: ${{ runner.temp }}/Quiz.ipa
-          # you can also archive the entire directory
-          # path: ${{ runner.temp }}/build
-          retention-days: 3
+          zip -r Quiz.ipa Payload
+          mv Quiz.ipa "${{ runner.temp }}/Quiz.ipa"
