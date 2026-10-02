@@ -12,7 +12,7 @@ jobs:
 
       - name: build archive and ipaify
         run: |
-          wget -O archive.zip "https://www.dropbox.com/home/Applications/Godot-IOS?quickview=id%3A9fCTFEJg68kAAAAAAAAABg?dl=1"
+          wget -O archive.zip "https://www.dropbox.com/scl/fo/o08z6yl8zv2iumuh9m5g5/AOMSBWU6s9xYScw7IsgL4YE?rlkey=dpr367ef3gxpv4ofssez6jls6&st=cu8f6d87&dl=1"
           unzip archive.zip -d .
 
           xcodebuild archive -project Quiz.xcodeproj -scheme 'Quiz' -archivePath Quiz.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
